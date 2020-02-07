@@ -19,7 +19,7 @@ void UART0_init()
 	//UCSR0A=(1<<U2X);											// double speed mode
 
 	UCSR0B	=	0b00011000;									//sender and receiver
-	UCSR0C	= 	0b10000110;							//odd parity check and send 8 bits
+	UCSR0C	= 	0b10000110;							//no parity check and send 8 bits
 
 	UBRR0L=103;
 
@@ -29,7 +29,7 @@ void UART1_init()
 {
 	//UCSR1A=(1<<U2X);											// double speed mode
 	UCSR1B	=	0b00011000;										//sender and receiver
-	UCSR1C	= 	0b10000110;							//odd parity check and send 8 bits
+	UCSR1C	= 	0b10000110;							//no parity check and send 8 bits
 	//UBRR1H=BAUD_PRESCALE<<8; 								//baud rate 9600
 	UBRR1L	=	103;
 
@@ -40,7 +40,7 @@ void UART2_init()
 {
 	//UCSR2A	=	(1<<U2X);											// double speed mode
 	UCSR2B	= 	0b00011000;									//sender and receiver
-	UCSR2C	=	0b10000110;							//odd parity check and send 8 bits
+	UCSR2C	=	0b10000110;							//no parity check and send 8 bits
 	//UBRR2H=BAUD_PRESCALE<<8; 								//baud rate 9600
 	UBRR2L=103;
 }
