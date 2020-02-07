@@ -13,13 +13,13 @@
  * Roll pitch:	Inputs 	= 	U1 (Thrust force), x_dot_dot_cmd, y_dot_dot_cmd, phi, theta, psi
  * 				outputs	=	p_cmd, q_cmd
  *
- * Yaw:			Inputs 	= 	psi_cmd
+ * Yaw:			Inputs 	= 	psi_cmd, psi
  * 				outputs	=	r_cmd
  *
  * Altitude:	Inputs 	= 	z, z_dot, phi, theta, psi, z_cmd, z_dot_cmd
  * 				outputs	=	U1 (Thrust force)
  *
- * Lateral:		Inputs 	= 	x, y, x_dot, y_dot, x_cmd, y_cmd, x_dot_cmd, y_dot_cmd
+ * Lateral:		Inputs 	= 	x, y, x_dot, y_dot, x_cmd, y_cmd, x_dot_cmd, y_dot_cmd, phi, theta, psi
  * 				outputs	= 	x_dot_dot_cmd, y_dot_dot_cmd
  *
  *
