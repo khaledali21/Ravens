@@ -7,8 +7,8 @@
 
 
 #include "DDIO_128.h"
-#include "STD_TYPES_128.h"
-#include "UTILS_128.h"
+#include "STD_TYPES.h"
+#include "UTILS.h"
 void SetPinDir(u8 PinNumber,u8 PinDirection)
 {
 	u8 PortLetter = PinNumber/8;
@@ -165,9 +165,6 @@ u8 ReadPinVal(u8 PinNumber)
 
 
 
-	}
-
-}
 
 
 

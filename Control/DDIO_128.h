@@ -4,8 +4,8 @@
 #define DDIO_128_H_
 
 
-#include "STD_TYPES_128.h"
-#include "UTILS_128.h"
+#include "STD_TYPES.h"
+#include "UTILS.h"
 
 /*
  * Define ATMEGA128 Registers
