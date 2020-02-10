@@ -31,7 +31,7 @@
 #include "PWM.h"
 
 
-TCCR1A = (1 << COM1A1) | (1 << WGM11) | (1 << COM1B1);	//Clear output upon match. 9 bit Fast PWM raise TOV upon TOP
+TCCR1A |= (1 << COM1A1) | (1 << WGM11) | (1 << COM1B1);	//Clear output upon match. 9 bit Fast PWM raise TOV upon TOP
 TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);		//Prescaler = 1024
 
 TCCR3A |= (1 << COM3A1) | (1 << COM3B1) | (1 << WGM11);	//Same as timer 1.
