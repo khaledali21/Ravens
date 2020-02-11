@@ -11,7 +11,7 @@
  * please note that alt is meaured from the sea level  not from ground
  */
 
-void GPS_Read(f32 *lat,f32 *lon ,f32 *alt)
+void GPS_Read(f32 *lon ,f32 *lat ,f32 *alt)
 {
 	char temp_lat[10];
 	char temp_lon[10];
@@ -52,21 +52,19 @@ void GPS_Read(f32 *lat,f32 *lon ,f32 *alt)
 	*lon=strTof(temp_lon);
 	*alt=strTof(temp_alt);
 /*how to transform degree to meter .. temp_lat form is ddmm.mmmm .. where d is degree m is mnt
- *  first multi with 10 and get dd alone them multi with 1000000 to get mnts
+ *  first multi with 10 and get dd alone them multi with 100 to get mnts
  *   devide mnts by 60 to get degree
- *   now add to the old dgrees and multi with 111,195 to get it in meters
+ *   now add to the old dgrees and multi with 111,139 to get it in meters
  */
-	f32 temp1=temp_lat/100;
-	u8 lat_deg= temp1;
-	temp1 = temp1 *1000000/60;
-	f32 lat_deg_mnt=lat_deg + temp1;
-	temp_lat= lat_deg_mnt * 111195;
+	u8 lat_deg=temp_lat/100;
+	f32 temp_mnts = (temp_lat-lat_deg) /60;
+	f32 lat_deg_mnt=lat_deg + temp_mnts;
+	temp_lat= lat_deg_mnt * 111139;
 
-	f32 temp1=temp_lon/100;
-	u8 lon_deg= temp1;
-	temp1 = temp1 *1000000/60;
-	f32 lon_deg_mnt=lon_deg + temp1;
-	temp_lon= lon_deg_mnt * 111195;
+	u8 lon_deg=temp_lon/100;
+	temp_mnts = (temp_lon-lon_deg) /60;
+	f32 lon_deg_mnt=lon_deg + temp_mnts;
+	temp_lon= lon_deg_mnt * 111139;
 
 
 
