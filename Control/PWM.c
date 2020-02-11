@@ -105,7 +105,7 @@ void PWM(u8 dutyCycle, u8 motorNumber)					//dutyCycle is a percentage of how mu
 		OCR3BH = (temp >> 8);
 		break;
 	default:
-		temp = 29173 + 0.5 * 2000 + 2000;			
+		temp = 29173 + 0.2 * 2000 + 2000;			
 		OCR1AL = temp & 0xff;
 		OCR1AH = (temp >> 8);
 		OCR1BL = temp & 0xff;
