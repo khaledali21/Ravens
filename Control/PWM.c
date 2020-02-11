@@ -47,13 +47,13 @@ void ARM_Motors(void)
 	TCNT3L = 0xF5;											//Set default value as explained in description.
 	TCNT3H = 0x71;
 
-	u16 start = 0.2*0.05*36363 + 0.05*36363 + 29173;		//(20% ARMING) CHANGE THIS IN CASE OF NOT GOOD ARMING
+	u16 start = 0.2*0.055*36363 + 0.055*36363 + 29173;		//(20% ARMING) CHANGE THIS IN CASE OF NOT GOOD ARMING
 	/*	Translation: 36363 -> range (65563 - 29173).
 	 * 	Where 29173 is the default value placed to keep it at 55 Hz
-	 *	The range is 20 ms, therefore, divide 36363 by 20 to get 1 ms which is 1818. T
+	 *	The range is 18 ms, therefore, divide 36363 by 18 to get 1 ms which is 2020.
 	 *	The ESC ranges from zero throttle to 100% throttle corresponding to 1 ms (no throttle) to:
 	 *	2 ms (full throttle), therefore, to arm the motors at 20% we need a pulse width of 1.2 ms,
-	 *	which corresponds to 29173 + 1818 + 1818/5 = whatever b2a.
+	 *	which corresponds to 29173 + 2020 + 2020/5 = whatever b2a.
 	 */
 
 	OCR1AL = start & 0xff;
@@ -84,7 +84,7 @@ void ARM_Motors(void)
 
 void PWM(u8 dutyCycle, u8 motorNumber)					//dutyCycle is a percentage of how much force is needed of max
 {
-	u16 temp = 3277 + ( dutyCycle/100) * 3277;			//First get the value needed then split to LOW and HIGH
+	u16 temp = 29173 + (dutyCycle/100) * 2020 + 2020;			//First get the value needed then split to LOW and HIGH
 
 	switch(motorNumber)
 	{
