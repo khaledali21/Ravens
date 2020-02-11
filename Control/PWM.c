@@ -53,7 +53,7 @@ void ARM_Motors(void)
 	 *	The range is 18 ms, therefore, divide 36363 by 18 to get 1 ms which is 2020.
 	 *	The ESC ranges from zero throttle to 100% throttle corresponding to 1 ms (no throttle) to:
 	 *	2 ms (full throttle), therefore, to arm the motors at 20% we need a pulse width of 1.2 ms,
-	 *	which corresponds to 29173 + 2020 + 2020/5 = whatever b2a.
+	 *	which corresponds to 29173 + 2000 + 2000/5 = whatever b2a.
 	 */
 
 	OCR1AL = start & 0xff;
@@ -84,7 +84,7 @@ void ARM_Motors(void)
 
 void PWM(u8 dutyCycle, u8 motorNumber)					//dutyCycle is a percentage of how much force is needed of max
 {
-	u16 temp = 29173 + (dutyCycle/100) * 2020 + 2020;			//First get the value needed then split to LOW and HIGH
+	u16 temp = 29173 + (dutyCycle/100) * 2000 + 2000;			//First get the value needed then split to LOW and HIGH
 
 	switch(motorNumber)
 	{
@@ -105,7 +105,7 @@ void PWM(u8 dutyCycle, u8 motorNumber)					//dutyCycle is a percentage of how mu
 		OCR3BH = (temp >> 8);
 		break;
 	default:
-		temp = 29173 + 0.5 * 2020 + 2020;			
+		temp = 29173 + 0.5 * 2000 + 2000;			
 		OCR1AL = temp & 0xff;
 		OCR1AH = (temp >> 8);
 		OCR1BL = temp & 0xff;
