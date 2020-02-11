@@ -4,10 +4,12 @@
  *  Created on: Oct 4, 2019
  *      Author: mahmo
  */
-//test useless s
-//another test another one to fk ....................
+
 #include "gps.h"
-// fk ur ass nigga
+
+/* This module prvoides lat, lon, and alt in meters passd by referance
+ * please note that alt is meaured from the sea level  not from ground
+ */
 
 void GPS_Read(f32 *lat,f32 *lon ,f32 *alt)
 {
@@ -47,6 +49,30 @@ void GPS_Read(f32 *lat,f32 *lon ,f32 *alt)
 	UART1_receiveString (*trash);
 	UART1_receiveString(temp_alt);
 	*lat=strTof(temp_lat);											// put the reading in the variables passed by reference
+	*lon=strTof(temp_lon);
+	*alt=strTof(temp_alt);
+/*how to transform degree to meter .. temp_lat form is ddmm.mmmm .. where d is degree m is mnt
+ *  first multi with 10 and get dd alone them multi with 1000000 to get mnts
+ *   devide mnts by 60 to get degree
+ *   now add to the old dgrees and multi with 111,195 to get it in meters
+ */
+	f32 temp1=temp_lat/100;
+	u8 lat_deg= temp1;
+	temp1 = temp1 *1000000/60;
+	f32 lat_deg_mnt=lat_deg + temp1;
+	temp_lat= lat_deg_mnt * 111195;
+
+	f32 temp1=temp_lon/100;
+	u8 lon_deg= temp1;
+	temp1 = temp1 *1000000/60;
+	f32 lon_deg_mnt=lon_deg + temp1;
+	temp_lon= lon_deg_mnt * 111195;
+
+
+
+
+
+	*lat=strTof(temp_lat);				// put the reading in the variables passed by reference
 	*lon=strTof(temp_lon);
 	*alt=strTof(temp_alt);
 
