@@ -7,7 +7,7 @@
 //test useless s
 //another test another one to fk ....................
 #include "gps.h"
-
+// fk ur ass nigga
 
 void GPS_Read(f32 *lat,f32 *lon ,f32 *alt)
 {
