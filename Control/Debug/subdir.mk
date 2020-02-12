@@ -5,7 +5,9 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Blocks.c \
-../RTOS_test_EX2.c \
+../DDIO_128.c \
+../PWM.c \
+../USART_128.c \
 ../croutine.c \
 ../heap_1.c \
 ../list.c \
@@ -17,7 +19,9 @@ C_SRCS += \
 
 OBJS += \
 ./Blocks.o \
-./RTOS_test_EX2.o \
+./DDIO_128.o \
+./PWM.o \
+./USART_128.o \
 ./croutine.o \
 ./heap_1.o \
 ./list.o \
@@ -29,7 +33,9 @@ OBJS += \
 
 C_DEPS += \
 ./Blocks.d \
-./RTOS_test_EX2.d \
+./DDIO_128.d \
+./PWM.d \
+./USART_128.d \
 ./croutine.d \
 ./heap_1.d \
 ./list.d \
