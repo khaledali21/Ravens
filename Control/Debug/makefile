@@ -49,7 +49,7 @@ all: Control.elf secondary-outputs
 Control.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,Control.map -mmcu=atmega128 -o "Control.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,Control.map -L/usr/lib -mmcu=atmega128 -o "Control.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
