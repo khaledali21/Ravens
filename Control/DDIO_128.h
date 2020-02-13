@@ -136,7 +136,7 @@
 
 void SetPinDir(u8 PinNumber,u8 PinDirection);
 void SetPinVal(u8 PinNumber,u8 PinValue);
-u8   ReadPinVal(u8 PinNumber);
+u8 ReadPinVal(u8 PinNumber);
 
 
 #endif /* DDIO_128_H_ */

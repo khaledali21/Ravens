@@ -1,14 +1,7 @@
-/*
- * DDIO_2560.c
- *
- *  Created on: Oct 6, 2018
- *      Author: Ahmed Anwar
- */
-
-
 #include "DDIO_128.h"
 #include "STD_TYPES.h"
 #include "UTILS.h"
+
 void SetPinDir(u8 PinNumber,u8 PinDirection)
 {
 	u8 PortLetter = PinNumber/8;
@@ -157,7 +150,6 @@ u8 ReadPinVal(u8 PinNumber)
 		case (6):
 		return (GET_BIT(PING,PinNumber%8));
 		break;
-
 	}
 
 }
