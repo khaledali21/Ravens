@@ -9,13 +9,13 @@
 #include "STD_TYPES.h"
 #include "FreeRTOS.h"
 #include "task.h"
-//#include "Blocks.h"
+#include "Blocks.h"
 #include "PWM.h"
 #include"avr/delay.h"
 
 
 void main(void)
-{ /*
+{
 	parameters parameter;
 
 	xTaskCreate(lateral_controller,"lateral", configMINIMAL_STACK_SIZE, &parameter, 1, NULL);
@@ -24,24 +24,12 @@ void main(void)
 	xTaskCreate(roll_pitch,"roll&pitch", configMINIMAL_STACK_SIZE, &parameter, 4, NULL);
 	xTaskCreate(body_rates,"body_rates", configMINIMAL_STACK_SIZE, &parameter, 5, NULL);
 
-	*/
+
 	ARM_Motors();
 	int i;
 	while (1)
 	{
-		for (i = 0; i < 100; i = i+10)
-		{
-			PWM(i, 1);
-			_delay_ms(500);
-		}
-		if(i == 100)
-		{
-			for (i = 0; i > 0; i = i-10)
-				{
-					PWM(i, 1);
-					_delay_ms(500);
-				}
-		}
+
 	}
 
 }

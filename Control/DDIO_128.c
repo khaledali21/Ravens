@@ -130,26 +130,26 @@ u8 ReadPinVal(u8 PinNumber)
 	switch(PortLetter)
 	{
 		case (0):
-		return (GET_BIT(PINA,PinNumber%8));
-		break;
+				return (GET_BIT(PINA,PinNumber%8));
+				break;
 		case (1):
-		return (GET_BIT(PINB,PinNumber%8));
-		break;
+				return (GET_BIT(PINB,PinNumber%8));
+				break;
 		case (2):
-		return (GET_BIT(PINC,PinNumber%8));
-		break;
+				return (GET_BIT(PINC,PinNumber%8));
+				break;
 		case (3):
-		return (GET_BIT(PIND,PinNumber%8));
-		break;
+				return (GET_BIT(PIND,PinNumber%8));
+				break;
 		case (4):
-		return (GET_BIT(PINE,PinNumber%8));
-		break;
+				return (GET_BIT(PINE,PinNumber%8));
+				break;
 		case (5):
-		return (GET_BIT(PINF,PinNumber%8));
-		break;
+				return (GET_BIT(PINF,PinNumber%8));
+				break;
 		case (6):
-		return (GET_BIT(PING,PinNumber%8));
-		break;
+				return (GET_BIT(PING,PinNumber%8));
+				break;
 	}
 
 }

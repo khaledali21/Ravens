@@ -32,8 +32,14 @@ endif
 LSS += \
 Control.lss \
 
+FLASH_IMAGE += \
+Control.hex \
+
 SIZEDUMMY += \
 sizedummy \
+
+AVRDUDEDUMMY += \
+avrdudedummy \
 
 
 # All Target
@@ -53,18 +59,30 @@ Control.lss: Control.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Control.hex: Control.elf
+	@echo 'Create Flash image (ihex format)'
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Control.elf  "Control.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 sizedummy: Control.elf
 	@echo 'Invoking: Print Size'
 	-avr-size --format=avr --mcu=atmega128 Control.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+avrdudedummy: Control.elf
+	@echo 'Invoking: AVRDude'
+	C:\WinAVR-20100110\bin\avrdude -pm128 -cusbasp -Uflash:w:Control.hex:a
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) $(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) Control.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(AVRDUDEDUMMY)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) Control.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(SIZEDUMMY)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(SIZEDUMMY) $(AVRDUDEDUMMY)
 
 .PHONY: all clean dependents
 .SECONDARY:
