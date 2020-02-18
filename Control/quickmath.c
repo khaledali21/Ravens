@@ -23,7 +23,7 @@ float power(float base, int exp) {
 int fact(int n) {
     return n <= 0 ? 1 : n * fact(n-1);
 }
-//wazab ma nigga
+//ffff
 
 float sine(f32 deg) {
     deg %= 360; // make it less than 360
