@@ -48,31 +48,31 @@ void GPS_Read(f32 *lon ,f32 *lat ,f32 *alt)
 	UART1_receiveString (*trash);
 	UART1_receiveString (*trash);
 	UART1_receiveString(temp_alt);
-	*lat=strTof(temp_lat);											// put the reading in the variables passed by reference
-	*lon=strTof(temp_lon);
-	*alt=strTof(temp_alt);
+	f32 lat_num=strTof(temp_lat);											// put the reading in the variables passed by reference
+	f32 lon_num=strTof(temp_lon);
+	f32 alt_num=strTof(temp_alt);
 /*how to transform degree to meter .. temp_lat form is ddmm.mmmm .. where d is degree m is mnt
  *  first multi with 10 and get dd alone them multi with 100 to get mnts
  *   devide mnts by 60 to get degree
  *   now add to the old dgrees and multi with 111,139 to get it in meters
  */
-	u8 lat_deg=temp_lat/100;
-	f32 temp_mnts = (temp_lat-lat_deg) /60;
+	u8 lat_deg=lat_num/100;
+	f32 temp_mnts = (lat_num-lat_deg) /60;
 	f32 lat_deg_mnt=lat_deg + temp_mnts;
-	temp_lat= lat_deg_mnt * 111139;
+	lat_num= lat_deg_mnt * 111139;
 
-	u8 lon_deg=temp_lon/100;
-	temp_mnts = (temp_lon-lon_deg) /60;
+	u8 lon_deg=lon_num/100;
+	temp_mnts = (lon_num-lon_deg) /60;
 	f32 lon_deg_mnt=lon_deg + temp_mnts;
-	temp_lon= lon_deg_mnt * 111139;
+	lon_num= lon_deg_mnt * 111139;
 
 
 
 
 
-	*lat=strTof(temp_lat);				// put the reading in the variables passed by reference
-	*lon=strTof(temp_lon);
-	*alt=strTof(temp_alt);
+	*lat=strTof(lat_num);				// put the reading in the variables passed by reference
+	*lon=strTof(lon_num);
+	*alt=strTof(alt_num);
 
 	return;
 }
