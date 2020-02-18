@@ -25,7 +25,7 @@ int fact(int n) {
 }
 
 
-float sine(int deg) {
+float sine(f32 deg) {
     deg %= 360; // make it less than 360
     float rad = deg * PI / 180;
     float sin = 0;
@@ -37,7 +37,7 @@ float sine(int deg) {
     return sin;
 }
 
-float cosine(int deg) {
+float cosine(f32 deg) {
     deg %= 360; // make it less than 360
     float rad = deg * PI / 180;
     float cos = 0;
@@ -49,10 +49,15 @@ float cosine(int deg) {
     return cos;
 }
 float arctan(f32 x)
-{
+{	u8 flipflag=0;
+	if(x>1)
+		{x=1/x; flipflag=1;}
 	float atan=0;
 	int i;
 	for(i=0; i< TERMS; i++){
 		atan+=power(-1,i) * power(x, (2 *i) + 1) / ((2 *i) + 1);
 	}
+	if(flipflag==1)
+		atan=(PI/2)-atan;
+	return atan;
 }
