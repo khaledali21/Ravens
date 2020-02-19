@@ -91,7 +91,7 @@ void Quaternion(f32 *q, f32 *euler)
 void Rotate_BtoW(f32 *acc, f32 *q)
 {	q[0]=-q[0];
 	f32 R[9];
-
+	f32 acc2[3];
 	f32 r0 = q[0]*q[0];
 	f32 r1 = q[1]*q[1];
 	f32 r2 = q[2]*q[2];
@@ -105,7 +105,11 @@ void Rotate_BtoW(f32 *acc, f32 *q)
 	R[6] = 2*q[1]*q[3] + 2*q[0]*q[2];
 	R[7] = 2*q[2]*q[3] - 2*q[0]*q[1];
 	R[8] = r0 - r1 - r2 + r3;
-	acc[0] = R[0]*acc[0] + R[1]*acc[1] + R[2]*acc[2];
-	acc[1] = R[3]*acc[0] + R[4]*acc[1] + R[5]*acc[2];
-	acc[2] = R[6]*acc[0] + R[7]*acc[1] + R[8]*acc[2];
+	acc2[0] = R[0]*acc[0] + R[1]*acc[1] + R[2]*acc[2];
+	acc2[1] = R[3]*acc[0] + R[4]*acc[1] + R[5]*acc[2];
+	acc2[2] = R[6]*acc[0] + R[7]*acc[1] + R[8]*acc[2];
+	acc[0] = acc2[0];
+	acc[1] = acc2[1];
+	acc[2] = acc2[2];
+
 }

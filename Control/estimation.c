@@ -60,4 +60,3 @@ void prediction(parameters *ptr)
 	ptr->z_dot += dt * acc[2] - dt * 9.812;
 }
 
-á
