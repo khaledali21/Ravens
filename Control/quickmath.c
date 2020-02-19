@@ -76,3 +76,36 @@ float arctan(f32 x)
 		atan=(PI/2)-atan;
 	return atan;
 }
+
+void Quaternion(f32 *q, f32 *euler)
+{
+	euler[0]/=2;
+	euler[1]/=2;
+	euler[2]/=2;
+	q[0] = cosine(euler[0]) * cosine(euler[1]) * cosine(euler[2])   + sine(euler[0])  * sine(euler[1]) * sine(euler[2]);
+	q[1] =-cosine(euler[0]) * sine(euler[1]) * sine(euler[2])   + cosine(euler[1]) * cosine(euler[2])   * sine(euler[0]);
+	q[2] = cosine(euler[0]) * cosine(euler[2])   * sine(euler[1]) + sine(euler[0])  * cosine(euler[1]) * sine(euler[2]);
+	q[3] = cosine(euler[0]) * cosine(euler[1]) * sine(euler[2])   - sine(euler[0])  * cosine(euler[2])   * sine(euler[1]);
+
+}
+void Rotate_BtoW(f32 *acc, f32 *q)
+{	q[0]=-q[0];
+	f32 R[9];
+
+	f32 r0 = q[0]*q[0];
+	f32 r1 = q[1]*q[1];
+	f32 r2 = q[2]*q[2];
+	f32 r3 = q[3]*q[3];
+	R[0] = r0 + r1 - r2 - r3;
+	R[1] = 2*q[1]*q[2] + 2*q[0]*q[3];
+	R[2] = 2*q[1]*q[3] - 2*q[0]*q[2];
+	R[3] = 2*q[1]*q[2] - 2*q[0]*q[3];
+	R[4] = r0 - r1 + r2 - r3;
+	R[5] = 2*q[2]*q[3] + 2*q[0]*q[1];
+	R[6] = 2*q[1]*q[3] + 2*q[0]*q[2];
+	R[7] = 2*q[2]*q[3] - 2*q[0]*q[1];
+	R[8] = r0 - r1 - r2 + r3;
+	acc[0] = R[0]*acc[0] + R[1]*acc[1] + R[2]*acc[2];
+	acc[1] = R[3]*acc[0] + R[4]*acc[1] + R[5]*acc[2];
+	acc[2] = R[6]*acc[0] + R[7]*acc[1] + R[8]*acc[2];
+}
