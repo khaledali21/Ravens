@@ -1,8 +1,8 @@
 #include "STD_TYPES.h"
 #include "UTILS.h"
-#include "Constants.h"
 #include "quickmath.h"
 #include "Blocks.h"
+#include "Constants.h"
 /* Implementation of Controller blocks
  * This part consists of an Inner loop and an Outer loop.
  * The inner loop consists of: Body rate, roll pitch and yaw controller.

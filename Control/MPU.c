@@ -62,7 +62,7 @@ void MPU_Init()
 	I2C_Stop();
 }
 
-void Read_IMU_Values(accel *acc, bodyrate *g)
+void Read_IMU_Values(accel *acc, bodyrate *gyro)
 {
 	f32 temp;
 	I2C_Add(0xD0);
@@ -72,16 +72,16 @@ void Read_IMU_Values(accel *acc, bodyrate *g)
 	acc->y = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());			//Read_Ack HIGH  then LOW
 	acc->z = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());			/////////////////////
 	temp = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
-	g->p = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
-	g->q = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
-	g->r = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
+	gyro->p = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
+	gyro->q = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
+	gyro->r = ((u16)I2C_Read()<<8) | ((u16)I2C_Read());
 	I2C_Stop();
 	acc->x /= 2048;								///////////////////////////////////////////
 	acc->y /= 2048;								//normalizing the raw values to real values
 	acc->z /= 2048;								///////////////////////////////////////////
-	g->p /= 16.4;
-	g->q /= 16.4;
-	g->r /= 16.4;
+	gyro->p /= 16.4;
+	gyro->q /= 16.4;
+	gyro->r /= 16.4;
 }
 
 

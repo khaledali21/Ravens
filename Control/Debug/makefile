@@ -73,7 +73,7 @@ sizedummy: Control.elf
 
 avrdudedummy: Control.elf
 	@echo 'Invoking: AVRDude'
-	C:\WinAVR-20100110\bin\avrdude -pm128 -cusbasp -Uflash:w:Control.hex:a
+	E:\Embedded Course\Tools\SDK\IMT_SDK_Win_64\WinAVR\bin\avrdude -pm128 -Uflash:w:Control.hex:a
 	@echo 'Finished building: $@'
 	@echo ' '
 

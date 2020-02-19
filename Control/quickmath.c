@@ -4,6 +4,7 @@
  *  Created on: Feb 18, 2020
  *      Author: Khaled Ali
  */
+#include "STD_TYPES.h"
 #include "quickmath.h"
 
 
@@ -26,7 +27,14 @@ int fact(int n) {
 //new comment
 
 float sine(f32 deg) {
-    deg %= 360; // make it less than 360
+    while(deg>360)
+    {
+    	deg-=360;
+    }
+    while(deg<-360)
+    {
+    	deg+=360;
+    }
     float rad = deg * PI / 180;
     float sin = 0;
 
@@ -38,7 +46,14 @@ float sine(f32 deg) {
 }
 
 float cosine(f32 deg) {
-    deg %= 360; // make it less than 360
+    while(deg>360)
+    {
+    	deg-=360;
+    }
+    while(deg<-360)
+    {
+    	deg+=360;
+    }
     float rad = deg * PI / 180;
     float cos = 0;
 
