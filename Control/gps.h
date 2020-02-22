@@ -9,7 +9,8 @@
 #define GPS_H_
 #include"STD_TYPES.h"
 #include"UTILS.h"
-//#include "strTof.h"
+#include "strTof.h"
+#include "USART_128.h"
 void GPS_Read(f32 *lat,f32 *lon , f32 *alt);
 
 

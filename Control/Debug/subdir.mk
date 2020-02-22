@@ -9,11 +9,13 @@ C_SRCS += \
 ../PWM.c \
 ../USART_128.c \
 ../croutine.c \
+../gps.c \
 ../heap_1.c \
 ../list.c \
 ../main.c \
 ../port.c \
 ../queue.c \
+../strTof.c \
 ../tasks.c \
 ../timers.c 
 
@@ -23,11 +25,13 @@ OBJS += \
 ./PWM.o \
 ./USART_128.o \
 ./croutine.o \
+./gps.o \
 ./heap_1.o \
 ./list.o \
 ./main.o \
 ./port.o \
 ./queue.o \
+./strTof.o \
 ./tasks.o \
 ./timers.o 
 
@@ -37,11 +41,13 @@ C_DEPS += \
 ./PWM.d \
 ./USART_128.d \
 ./croutine.d \
+./gps.d \
 ./heap_1.d \
 ./list.d \
 ./main.d \
 ./port.d \
 ./queue.d \
+./strTof.d \
 ./tasks.d \
 ./timers.d 
 
