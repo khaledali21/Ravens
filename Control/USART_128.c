@@ -5,6 +5,8 @@
  *      Author: mahmoud
  */
 #include "USART_128.h"
+#include <avr/io.h>
+
 /*
  * FUNCTION TO US :
  * UART_sendByte(DATA) send byte
@@ -36,14 +38,6 @@ void UART1_init()
 }
 
 
-void UART2_init()
-{
-	//UCSR2A	=	(1<<U2X);											// double speed mode
-	UCSR2B	= 	0b00011000;									//sender and receiver
-	UCSR2C	=	0b10000110;							//no parity check and send 8 bits
-	//UBRR2H=BAUD_PRESCALE<<8; 								//baud rate 9600
-	UBRR2L=103;
-}
 
 
 
@@ -85,22 +79,9 @@ u8 UART1_receiveByte (void)
 
 
 /* this fun sends a byte and waits till the U DATA is sent then send another byte  to avoid overwriting  */
-void UART2_sendByte (u8 data)
-{
-	UDR2=data;
-	while (!GET_BIT(UCSR2A,5)){}
-	SET_BIT(UCSR2A,TXC);
 
-}
 /* this fun receive a byte and waits untill the data is empty to avoid overwriting */
-u8 UART2_receiveByte (void)
-{
-	while (!GET_BIT(UCSR2A,7)){}
-	/*
-	 * wait until the last byte is received
-	 */
-	return UDR2;
-}
+
 
 
 
@@ -141,7 +122,7 @@ void UART1_sendString (const u8 *str)
 void UART1_receiveString (u8 *str)
 {
 	*str=UART1_receiveByte();
-	while (*str != '#')
+	while (*str != ',')
 	{
 		str++;
 		*str=UART1_receiveByte();
@@ -153,25 +134,3 @@ void UART1_receiveString (u8 *str)
 
 
 
-void UART2_sendString (const u8 *str)
-{
-	while (*str != '\0')
-	{
-		UART2_sendByte(*str);
-		str++;
-	}
-}
-
-
-void UART2_receiveString (u8 *str)
-{
-	*str=UART2_receiveByte();
-	while (*str != ',')
-	{
-		str++;
-		*str=UART2_receiveByte();
-
-	}
-	*str='\0';
-
-}

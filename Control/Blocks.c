@@ -1,8 +1,8 @@
 #include "STD_TYPES.h"
 #include "UTILS.h"
-#include "Constants.h"
-#include <math.h>
+#include "quickmath.h"
 #include "Blocks.h"
+#include "Constants.h"
 /* Implementation of Controller blocks
  * This part consists of an Inner loop and an Outer loop.
  * The inner loop consists of: Body rate, roll pitch and yaw controller.
@@ -46,22 +46,24 @@ void roll_pitch(void *pt)
 	while(1)
 	{f32 dt = 0.001, b_x_dot_cmd, b_y_dot_cmd, taw=1/kp_bank;
 	f32 R11 = 1;
-	f32 R12 = sin(ptr->phi)*tan(ptr->theta);
-	f32 R22 = cos(ptr->phi);
+	f32 R12 = sine(ptr->phi) * sine(ptr->theta) / cosine(ptr->theta);
+	f32 R13= cosine(ptr->phi) * sine(ptr->theta) / cosine(ptr->theta);
 	f32 R21 = 0;
-	f32 R33 = cos(ptr->phi)/cos(ptr->theta);
-	f32 R13= cos(ptr->phi)* tan(ptr->theta);
+	f32 R22 = cosine(ptr->phi);
+	f32 R23= -sine(ptr->phi);
+	f32 R31 = 0;
+	f32 R32 = sine(ptr->phi) / cosine(ptr->theta);
+	f32 R33 = cosine(ptr->phi) / cosine(ptr->theta);
 	f32 R13_cmd= ptr->x_dot_dot_cmd*m/ptr->u1;
-	f32 R23= -sin(ptr->phi);
 	f32 R23_cmd= ptr->y_dot_dot_cmd*m/ptr->u1;
 
-	ptr->phi_dot = ptr->p + ptr->q * sin(ptr->phi) * tan(ptr->theta) + ptr->r * cos(ptr->phi) * tan(ptr->theta);
-    ptr->theta_dot = ptr->q * cos(ptr->phi) - ptr->r * sin(ptr->phi);
-    ptr->psi_dot = ptr-> q * sin(ptr->phi) / cos(ptr->theta) + ptr->r * cos(ptr->phi) / sin(ptr->theta);
+	/*ptr->phi_dot = ptr->p + ptr->q * R12 + ptr->r * R13;
+    ptr->theta_dot = ptr->q * R22 - ptr->r * R23;
+    ptr->psi_dot = ptr-> q * R32 + ptr->r * R33;
     ptr->phi += ptr->phi_dot * dt;
     ptr->theta += ptr->theta_dot * dt;
     ptr->psi += ptr->psi_dot * dt;
-
+*/
     b_x_dot_cmd= (R13-R13_cmd)/taw;
     b_y_dot_cmd= (R23-R23_cmd)/taw;
 
@@ -84,7 +86,7 @@ void altitude_controller(void *pt)
 {
 	parameters* ptr= pt;
 	while(1)
-	{f32 R33 = cos(ptr->phi)/cos(ptr->theta);
+	{f32 R33 = cosine(ptr->phi)/cosine(ptr->theta);
 	ptr->z_dot_dot_cmd= kp_rate*(ptr->z_cmd- ptr->z) + kd*(ptr->z_dot_cmd-ptr->z_dot);
 
 	ptr->u1 = m* (ptr->z_dot_dot_cmd - g)/R33;
@@ -101,4 +103,3 @@ void lateral_controller(void *pt)
 	vTaskDelay(100);
 	}
 }
-

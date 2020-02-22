@@ -54,4 +54,15 @@ typedef struct parameters{
 	f32 r_cmd;
 	f32 u1, u2, u3, u4;
 } parameters;
+typedef struct accel{
+	f32 x;
+	f32 y;
+	f32 z;
+}accel;
+typedef struct bodyrate{
+	f32 p;
+	f32 q;
+	f32 r;
+}bodyrate;
+
 #endif /* STD_TYPES_H_*/
