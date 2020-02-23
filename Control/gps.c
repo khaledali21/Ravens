@@ -67,16 +67,16 @@ u8 GPS_Read(accel *position, accel *velocity)
 	UART1_receiveByte(); //GPS fix (useless) +++++ U1-- 0=no fix -- 1=deadreckoning only -- 2=2D fix --3=3D fix -- 4=3D+DeadReckoning -- 5=Time fix only
 	u8 flag = UART1_receiveByte(); //Gps fix (PASS IT ONE I GET THE VARIABLE)
 
-	position->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
-	position->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
-	position->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
+	position->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	position->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	position->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
 	UART1_receiveByte();// accuracy useless 4
 	UART1_receiveByte();
 	UART1_receiveByte();
 	UART1_receiveByte();
-	velocity->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
-	velocity->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
-	velocity->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24);
+	velocity->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	velocity->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	velocity->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
 return flag;
 
 }
