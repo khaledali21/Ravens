@@ -12,8 +12,8 @@
 #include"UTILS.h"
 //#include"micro_config.h"
 /* FUNCTION DECLARATIONS                */
-void UART0_init();
-void UART1_init();
+void UART0_init(u8 baudrate);
+void UART1_init(u8 baudrate);
 void UART2_init();
 u8 UART0_receiveByte (void);
 void UART0_sendByte(u8 data);

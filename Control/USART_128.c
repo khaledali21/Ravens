@@ -16,7 +16,7 @@
  * UART_receiveString()
  *
  */
-void UART0_init(u8 budrate=103)
+void UART0_init(u8 budrate)
 {
 	//UCSR0A=(1<<U2X);											// double speed mode
 
@@ -27,7 +27,7 @@ void UART0_init(u8 budrate=103)
 
 }
 
-void UART1_init(u8 budrate=103)
+void UART1_init(u8 budrate)
 {
 	//UCSR1A=(1<<U2X);											// double speed mode
 	UCSR1B	=	0b00011000;										//sender and receiver
