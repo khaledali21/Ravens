@@ -6,14 +6,14 @@
  */
 
 #include "STD_TYPES.h"
-#include "MPU.h"
+#include "imu6050.h"
 #include "quickmath.h"
 //#include "Constants.h"
 void update_IMU(parameters *ptr)
 {
 	bodyrate * gyro;
 	accel * acc;
-	Read_IMU_Values(acc, gyro);
+	//Read_IMU_Values(acc, gyro);
 	f32 dt = 0.001; f32 taw=1;
 		f32 R11 = 1;
 		f32 R12 = sine(ptr->phi) * sine(ptr->theta) / cosine(ptr->theta);
