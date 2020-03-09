@@ -11,15 +11,32 @@
  * please note that alt is meaured from the sea level  not from ground
  */
 
-void GPS_Read(f32 *lon ,f32 *lat ,f32 *alt)
+void gps_init()
 {
-	char temp_lat[10];
-	char temp_lon[10];
-	char temp_alt[10];
-	// temporary variables,
-	//if the reading is accepted we change the real variables
-	u8 trash[10];
+	// first init the uart at 9600
 
+	u8 gps_init_9600[37]= {0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x00, 0xC2, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xB8, 0x42, 0xB5, 0x62, 0x06, 0x00, 0x01, 0x00, 0x01, 0x08, 0x22};
+	u8 i =0;
+	UART1_init(103);
+	for (u8 i=0 ; i<37 ; i++){
+		UART1_sendByte(gps_init_9600[i]);
+	}
+		UART1_init(8);
+
+
+	// now init the uart to 115200
+	u8 gps_init_115200 [79]= {0xB5 ,0x62, 0x06, 0x08, 0x06, 0x00, 0x64, 0x00, 0x01, 0x00, 0x01, 0x00, 0x7A, 0x12, 0xB5, 0x62, 0x06, 0x08, 0x00, 0x00, 0x0E, 0x30,
+			0xB5, 0x62, 0x06, 0x01, 0x08 ,0x00 ,0x01 ,0x06 ,0x00 ,0x01 ,0x00 ,0x00 ,0x00 ,0x00 ,0x17 ,0xDA ,0xB5 ,0x62 ,0x06 ,0x01 ,0x02 ,0x00 ,0x01 ,0x06 ,0x10 ,0x39,
+			0xB5, 0x62, 0x06, 0x09, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x17, 0x31, 0xBF, 0xB5, 0x62, 0x05, 0x01, 0x02, 0x00, 0x06, 0x09, 0x17, 0x40};
+	for (u8 i=0 ; i<79 ; i++){
+		UART1_sendByte(gps_init_115200[i]);
+	}
+
+}
+
+u8 GPS_Read(accel *position, accel *velocity)
+{
+//detecting the header of the line
 	u8 char1,char2,char3;
 	char1 = UART1_receiveByte();
 	char2 = UART1_receiveByte();
@@ -27,53 +44,40 @@ void GPS_Read(f32 *lon ,f32 *lat ,f32 *alt)
 	{
 
 		char3 = UART1_receiveByte();
-		if (char1=='G' && char2=='G' && char3 == 'A')		// the required info start with GGA
-			break;  										// break when we find the required info
+
+		if (char1==0xb5 && char2==0x62 && char3 == 0x01)		// the required info start with nav-sol header
+			break;  								  			// break when we find the required info
 		char1 = char2;
 		char2 = char3;
 	}
 
+	UART1_receiveByte(); //id
+	UART1_receiveByte(); // 2 byte length
 	UART1_receiveByte();
-	UART1_receiveString (*trash);
-	UART1_receiveString(temp_lat);
-
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveString(temp_lon);
+	UART1_receiveByte();//4 time
 	UART1_receiveByte();
 	UART1_receiveByte();
-
-	//if(UART1_receiveByte() == '0') return; 					// this byte says if the reading is acceptable or not
 	UART1_receiveByte();
-	UART1_receiveString (*trash);
-	UART1_receiveString (*trash);
-	UART1_receiveString(temp_alt);
-	f32 lat_num=strTof(temp_lat);											// put the reading in the variables passed by reference
-	f32 lon_num=strTof(temp_lon);
-	f32 alt_num=strTof(temp_alt);
-/*how to transform degree to meter .. temp_lat form is ddmm.mmmm .. where d is degree m is mnt
- *  first multi with 10 and get dd alone them multi with 100 to get mnts
- *   devide mnts by 60 to get degree
- *   now add to the old dgrees and multi with 111,139 to get it in meters
- */
-	u8 lat_deg=lat_num/100;
-	f32 temp_mnts = (lat_num-lat_deg) /60;
-	f32 lat_deg_mnt=lat_deg + temp_mnts;
-	lat_num= lat_deg_mnt * 111139;
+	UART1_receiveByte();//4 idk
+	UART1_receiveByte();
+	UART1_receiveByte();
+	UART1_receiveByte();
+	UART1_receiveByte(); //2 week
+	UART1_receiveByte();
+	UART1_receiveByte(); //GPS fix (useless) +++++ U1-- 0=no fix -- 1=deadreckoning only -- 2=2D fix --3=3D fix -- 4=3D+DeadReckoning -- 5=Time fix only
+	u8 flag = UART1_receiveByte(); //Gps fix (PASS IT ONE I GET THE VARIABLE)
 
-	u8 lon_deg=lon_num/100;
-	temp_mnts = (lon_num-lon_deg) /60;
-	f32 lon_deg_mnt=lon_deg + temp_mnts;
-	lon_num= lon_deg_mnt * 111139;
+	position->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	position->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	position->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	UART1_receiveByte();// accuracy useless 4
+	UART1_receiveByte();
+	UART1_receiveByte();
+	UART1_receiveByte();
+	velocity->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	velocity->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+	velocity->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+return flag;
 
-
-
-
-
-	*lat=strTof(lat_num);				// put the reading in the variables passed by reference
-	*lon=strTof(lon_num);
-	*alt=strTof(alt_num);
-
-	return;
 }
 
