@@ -7,7 +7,7 @@
 #include "STD_TYPES.h"
 #include "quickmath.h"
 
-
+extern f32 toinvert[12][12];
 float power(float base, int exp) {
     if(exp < 0) {
         if(base == 0)
@@ -26,7 +26,7 @@ int fact(int n) {
 }
 //new comment
 
-float sine(f32 deg) {
+float sin(f32 deg) {
     while(deg>360)
     {
     	deg-=360;
@@ -45,7 +45,7 @@ float sine(f32 deg) {
     return sin;
 }
 
-float cosine(f32 deg) {
+float cos(f32 deg) {
     while(deg>360)
     {
     	deg-=360;
@@ -82,10 +82,10 @@ void Quaternion(f32 *q, f32 *euler)
 	euler[0]/=2;
 	euler[1]/=2;
 	euler[2]/=2;
-	q[0] = cosine(euler[0]) * cosine(euler[1]) * cosine(euler[2])   + sine(euler[0])  * sine(euler[1]) * sine(euler[2]);
-	q[1] =-cosine(euler[0]) * sine(euler[1]) * sine(euler[2])   + cosine(euler[1]) * cosine(euler[2])   * sine(euler[0]);
-	q[2] = cosine(euler[0]) * cosine(euler[2])   * sine(euler[1]) + sine(euler[0])  * cosine(euler[1]) * sine(euler[2]);
-	q[3] = cosine(euler[0]) * cosine(euler[1]) * sine(euler[2])   - sine(euler[0])  * cosine(euler[2])   * sine(euler[1]);
+	q[0] = cos(euler[0]) * cos(euler[1]) * cos(euler[2])   + sin(euler[0])  * sin(euler[1]) * sin(euler[2]);
+	q[1] =-cos(euler[0]) * sin(euler[1]) * sin(euler[2])   + cos(euler[1]) * cos(euler[2])   * sin(euler[0]);
+	q[2] = cos(euler[0]) * cos(euler[2])   * sin(euler[1]) + sin(euler[0])  * cos(euler[1]) * sin(euler[2]);
+	q[3] = cos(euler[0]) * cos(euler[1]) * sin(euler[2])   - sin(euler[0])  * cos(euler[2])   * sin(euler[1]);
 
 }
 void Rotate_BtoW(f32 *acc, f32 *q)
@@ -111,5 +111,44 @@ void Rotate_BtoW(f32 *acc, f32 *q)
 	acc[0] = acc2[0];
 	acc[1] = acc2[1];
 	acc[2] = acc2[2];
+
+}
+void matrix_inverse(void)
+{	f32 ratio;
+	 for(int i=0;i<6;i++)
+			 {
+				  for(int j=0;j<6;j++)
+				  {
+					   if(i==j)
+					   {
+					    	toinvert[i][j+6] = 1;
+					   }
+					   else
+					   {
+					    	toinvert[i][j+6] = 0;
+					   }
+				  }
+			 }
+	 for(int i=0;i<6;i++)
+			 {
+				  for(int j=0;j<6;j++)
+				  {
+					   if(i!=j)
+					   {
+						    ratio = toinvert[j][i]/toinvert[i][i];
+						    for(int k=0; k<12 ;k++)
+						    {
+						     	toinvert[j][k] = toinvert[j][k] - ratio*toinvert[i][k];
+						    }
+					   }
+				  }
+			 }
+	 for(int i=0; i<6 ;i++)
+			 {
+				  for(int j=6;j<12;j++)
+				  {
+				   	toinvert[i][j] = toinvert[i][j]/toinvert[i][i];
+				  }
+			 }
 
 }

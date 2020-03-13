@@ -24,6 +24,22 @@
  *
  *
  */
+void output_thrust(void *pt)
+{
+	parameters *ptr = pt;
+	f32 l = L/1.4142135623;
+	f32 t1 = ptr->u2/ l;
+	f32 t2 = ptr->u3 / l;
+	f32 t3 = - ptr->u4/ k_thrust;
+	f32 t4 = ptr->u1;
+	ptr->cmd_thrust[0] = (t1 + t2 + t3 + t4)/4.f; // front left
+	ptr->cmd_thrust[1] = (-t1 + t2 - t3 + t4)/4.f; // front right
+	ptr->cmd_thrust[2] = (t1 - t2 - t3 + t4)/4.f ; // rear left
+	ptr->cmd_thrust[3] = (-t1 - t2 + t3 + t4)/4.f; // rear right
+}
+
+
+
 void body_rates(void *pt)
 {	parameters *ptr=pt;
 	while(1)
@@ -46,14 +62,14 @@ void roll_pitch(void *pt)
 	while(1)
 	{f32 dt = 0.001, b_x_dot_cmd, b_y_dot_cmd, taw=1/kp_bank;
 	f32 R11 = 1;
-	f32 R12 = sine(ptr->phi) * sine(ptr->theta) / cosine(ptr->theta);
-	f32 R13= cosine(ptr->phi) * sine(ptr->theta) / cosine(ptr->theta);
+	f32 R12 = sin(ptr->phi) * sin(ptr->theta) / cos(ptr->theta);
+	f32 R13= cos(ptr->phi) * sin(ptr->theta) / cos(ptr->theta);
 	f32 R21 = 0;
-	f32 R22 = cosine(ptr->phi);
-	f32 R23= -sine(ptr->phi);
+	f32 R22 = cos(ptr->phi);
+	f32 R23= -sin(ptr->phi);
 	f32 R31 = 0;
-	f32 R32 = sine(ptr->phi) / cosine(ptr->theta);
-	f32 R33 = cosine(ptr->phi) / cosine(ptr->theta);
+	f32 R32 = sin(ptr->phi) / cos(ptr->theta);
+	f32 R33 = cos(ptr->phi) / cos(ptr->theta);
 	f32 R13_cmd= ptr->x_dot_dot_cmd*m/ptr->u1;
 	f32 R23_cmd= ptr->y_dot_dot_cmd*m/ptr->u1;
 
@@ -86,7 +102,7 @@ void altitude_controller(void *pt)
 {
 	parameters* ptr= pt;
 	while(1)
-	{f32 R33 = cosine(ptr->phi)/cosine(ptr->theta);
+	{f32 R33 = cos(ptr->phi)/cos(ptr->theta);
 	ptr->z_dot_dot_cmd= kp_rate*(ptr->z_cmd- ptr->z) + kd*(ptr->z_dot_cmd-ptr->z_dot);
 
 	ptr->u1 = m* (ptr->z_dot_dot_cmd - g)/R33;
