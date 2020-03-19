@@ -113,6 +113,7 @@ void Rotate_BtoW(f32 *acc, f32 *q)
 	acc[2] = acc2[2];
 
 }
+
 void matrix_inverse(void)
 {	f32 ratio;
 	 for(int i=0;i<6;i++)
