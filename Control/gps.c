@@ -4,15 +4,19 @@
  *  Created on: Oct 4, 2019
  *      Author: mahmo
  */
-
+#include "STD_TYPES.h"
+#include <avr/interrupt.h>
+#include "USART_128.h"
 #include "gps.h"
 
 /* This module prvoides lat, lon, and alt in meters passd by referance
  * please note that alt is meaured from the sea level  not from ground
  */
 
-void gps_init()
+void gps_init(void)
 {
+
+	SREG|= 0b10000000; //enabling INT
 	// first init the uart at 9600
 
 	u8 gps_init_9600[37]= {0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x00, 0xC2, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xB8, 0x42, 0xB5, 0x62, 0x06, 0x00, 0x01, 0x00, 0x01, 0x08, 0x22};
@@ -33,51 +37,25 @@ void gps_init()
 	}
 
 }
+volatile u8 gps_data[60];
 
 u8 GPS_Read(accel *position, accel *velocity)
 {
-//detecting the header of the line
-	u8 char1,char2,char3;
-	char1 = UART1_receiveByte();
-	char2 = UART1_receiveByte();
-	while (1)
-	{
+	u8 flag;
 
-		char3 = UART1_receiveByte();
 
-		if (char1==0xb5 && char2==0x62 && char3 == 0x01)		// the required info start with nav-sol header
-			break;  								  			// break when we find the required info
-		char1 = char2;
-		char2 = char3;
-	}
+		flag = gps_data[16]; //Gps fix (PASS IT ONE I GET THE VARIABLE)
+		position->x = ((((s64)(gps_data[18])& 0xFF)) | (((s64)(gps_data[19]& 0xFF)) <<8)|(((s64)(gps_data[20]& 0xFF))<<16) | (((s64)(gps_data[21]& 0xFF))<<24))/100.0;
+		position->y = ((((s64)(gps_data[22])& 0xFF)) | (((s64)(gps_data[23]& 0xFF)) <<8)|(((s64)(gps_data[24]& 0xFF))<<16) | (((s64)(gps_data[25]& 0xFF))<<24))/100.0;
+		position->z = ((((s64)(gps_data[26])& 0xFF)) | (((s64)(gps_data[27]& 0xFF)) <<8)|(((s64)(gps_data[28]& 0xFF))<<16) | (((s64)(gps_data[29]& 0xFF))<<24))/100.0;
+		velocity->x = ((((s64)(gps_data[34])& 0xFF)) | (((s64)(gps_data[35]& 0xFF)) <<8)|(((s64)(gps_data[36]& 0xFF))<<16) | (((s64)(gps_data[37]& 0xFF))<<24))/100.0;
+		velocity->y = ((((s64)(gps_data[38])& 0xFF)) | (((s64)(gps_data[39]& 0xFF)) <<8)|(((s64)(gps_data[40]& 0xFF))<<16) | (((s64)(gps_data[41]& 0xFF))<<24))/100.0;
+		velocity->z = ((((s64)(gps_data[42])& 0xFF)) | (((s64)(gps_data[43]& 0xFF)) <<8)|(((s64)(gps_data[44]& 0xFF))<<16) | (((s64)(gps_data[45]& 0xFF))<<24))/100.0;
 
-	UART1_receiveByte(); //id
-	UART1_receiveByte(); // 2 byte length
-	UART1_receiveByte();
-	UART1_receiveByte();//4 time
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveByte();//4 idk
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveByte(); //2 week
-	UART1_receiveByte();
-	UART1_receiveByte(); //GPS fix (useless) +++++ U1-- 0=no fix -- 1=deadreckoning only -- 2=2D fix --3=3D fix -- 4=3D+DeadReckoning -- 5=Time fix only
-	u8 flag = UART1_receiveByte(); //Gps fix (PASS IT ONE I GET THE VARIABLE)
 
-	position->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
-	position->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
-	position->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
-	UART1_receiveByte();// accuracy useless 4
-	UART1_receiveByte();
-	UART1_receiveByte();
-	UART1_receiveByte();
-	velocity->x= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
-	velocity->y= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
-	velocity->z= ((u32)(UART1_receiveByte()& 0xFF)| ((u32)(UART1_receiveByte()& 0xFF) <<8)|((u32)(UART1_receiveByte()& 0xFF)<<16) | (u32)(UART1_receiveByte()& 0xFF)<<24)/100.0;
+
 return flag;
 
 }
+
 

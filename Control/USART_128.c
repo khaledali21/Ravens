@@ -5,7 +5,7 @@
  *      Author: mahmoud
  */
 #include "USART_128.h"
-#include <avr/io.h>
+#include <avr/interrupt.h>
 
 /*
  * FUNCTION TO US :
@@ -29,15 +29,13 @@ void UART0_init(u8 budrate)
 
 void UART1_init(u8 budrate)
 {
-	//UCSR1A=(1<<U2X);											// double speed mode
-	UCSR1B	=	0b00011000;										//sender and receiver
+
+	UCSR1B	=	0b10011000;							// enable interrupt //sender and receiver
 	UCSR1C	= 	0b10000110;							//no parity check and send 8 bits
 	//UBRR1H=BAUD_PRESCALE<<8; 								//baud rate 9600
 	UBRR1L	=budrate;
 
 }
-
-
 
 
 
@@ -109,7 +107,7 @@ void UART0_receiveString (u8 *str)
 }
 
 
-void UART1_sendString (const u8 *str)
+void UART1_sendString(const u8 *str)
 {
 	while (*str != '\0')
 	{
@@ -130,6 +128,17 @@ void UART1_receiveString (u8 *str)
 	}
 	*str='\0';
 
+}
+extern u8 gps_data[60];
+
+volatile u8 gps_count=0;
+ISR(USART1_RX_vect){
+
+	gps_data[gps_count]=UDR1;
+	if (gps_count !=0 && gps_data[gps_count] == 0x62 && gps_data[gps_count-1] == 0xB5 ) gps_count=1;
+	if (gps_count ==59)
+		gps_count=-1;
+	gps_count++;
 }
 
 

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * gps.h
  *
@@ -10,15 +9,14 @@
 #define GPS_H_
 #include"STD_TYPES.h"
 #include"UTILS.h"
-#include "strTof.h"
 #include "USART_128.h"
-void GPS_Read(f32 *lat,f32 *lon , f32 *alt);
-
+void gps_init(void);
+u8 GPS_Read(accel *position, accel *velocity);
 
 
 
 #endif /* GPS_H_ */
-=======
+
 /*
  * gps.h
  *
@@ -37,4 +35,3 @@ void gps_init();
 
 
 #endif /* GPS_H_ */
->>>>>>> dace0bb34349a62546d3f6c7f78d51a9c245c5a3

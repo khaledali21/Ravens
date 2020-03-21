@@ -158,7 +158,7 @@ void updatefromGps(void *p)
 	u8 fix;
 	f32 hprimegpsT[7][6];
 	fix = GPS_Read(position, velocity);
-	if (fix == 1)
+	if (fix == 3)
 	{
 		z[0] = position-> x;
 		z[1] = position-> y;
