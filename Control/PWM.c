@@ -2,7 +2,7 @@
  * PWM.c
  *
  *  Created on: Feb 10, 2020
- *      Author: Yousef
+ *      Author: Zayat
  */
 /* In this file:
  *
@@ -29,60 +29,26 @@
  *
  * 			-Place compare value in
  */
-
 #include "PWM.h"
 #include <avr/io.h>
+#define frequency 50
+#define prescaler 8
+#define TOP  (16000000/(prescaler*frequency)) 	//40000 total counts
+#define MAX 0xffff
 
 void ARM_Motors(void)
 {
+	ICR1 = TOP;
+	ICR3 = TOP;
+	TIMSK |= (1 << TOIE1);
+	ETIMSK |= (1 << TOIE3);
+
 	TCCR1A |= (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11) ;	//Clear output upon match. TOV on ICR TOP
+	TCCR3A |= (1 << COM3A1) | (1 << COM3B1) | (1 << WGM31) ;	//Same as timer 1.
 
-
-	TCCR3A |= (1 << COM3A1) | (1 << COM3B1) | (1 << WGM31) | (1 << WGM30);	//Same as timer 1.
-
-	TCNT1H = 0x8E;
-	TCNT1L = 0x0B;											//Set default value as explained in description.
-
-
-	TCNT3L = 0x8E;											//Set default value as explained in description.
-	TCNT3H = 0x0B;
-
-	u16 start = 0.2*0.055*36363 + 0.055*36363 + (65535 - 36363);		//(20% ARMING) CHANGE THIS IN CASE OF NOT GOOD ARMING
-	/*	Translation: 283 -> range (1023 - 740).
-	 * 	Where 740 is the default value placed to keep it at 55 Hz
-	 *	The range is 18 ms, therefore, divide 283 by 18 to get 1 ms which is 15.7 counts.
-	 *	The ESC ranges from zero throttle to 100% throttle corresponding to 1 ms (no throttle) to:
-	 *	2 ms (full throttle), therefore, to arm the motors at 20% we need a pulse width of 1.2 ms,
-	 *	which corresponds to 740 + 15 + 3 = 758.
-	 */
-
-	OCR1AH = (start >> 8);
-	OCR1AL = start & 0xff;
-
-	OCR1BH = (start >> 8);
-	OCR1BL = start & 0xff;
-
-	OCR3AH = (start >> 8);
-	OCR3AL = start & 0xff;
-
-	OCR3BH = (start >> 8);
-	OCR3BL = start & 0xff;
-
-	ICR1H = 0xff;
-	ICR1L = 0xff;
-
-	TIMSK |= (1 << TOIE1);// | (1 << OCIE1A) | (1 << OCIE1B);
-	ETIMSK |= (1 << TOIE3);// | (1 << OCIE3A) | (1 << OCIE3B);
-
-	TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS10) | (1 << CS12);		//Prescaler = 1024 and i deleted the shit out of wgm13
-	TCCR3B |= (1 << CS31) | (1 << WGM32) | (1 << WGM33);					//Same as timer 1.
+	TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS11) ;		//Prescaler = 8 and i deleted the shit out of wgm13
+	TCCR3B |= (1 << WGM32) | (1 << WGM33) | (1 << CS31);		//Same as timer 1.
 }
-ISR(TIMER1_OVF_vect)
-	{
-		TCNT1H = 0x8E;
-		TCNT1L = 0x0B;
-	}
-
 	/*The Following function takes in duty cycle and produces PWM signal accordingly (Might be changed later to take
 	 * force and output the PWM signal directly), along with Motor number to determine which OC reg.
 	 *
@@ -93,52 +59,31 @@ ISR(TIMER1_OVF_vect)
 	 * 												3    4
 	 *
 	 */
-
-void PWM(u8 dutyCycle, u8 motorNumber)					//dutyCycle is a percentage of how much force is needed of max
+void PWM(u16 dutyCycle, u8 motorNumber)
 {
-	u16 temp = 36363 + (dutyCycle/100) * 2000 + 2000;			//First get the value needed then split to LOW and HIGH
-	//u16 temp =  (dutyCycle/100.0) * (65535);
+	u16 temp = TOP * dutyCycle/10000.0;
 
 	switch(motorNumber)
 	{
 	case 1:
-
-		OCR1AH = (temp >> 8);
-		OCR1AL = temp & 0xff;
+		OCR1A = temp;
 		break;
 	case 2:
-
-		OCR1BH = (temp >> 8);
-		OCR1BL = temp & 0xff;
+		OCR1B = temp;
 		break;
 	case 3:
-		OCR3AH = (temp >> 8);
-		OCR3AL = temp & 0xff;
+		OCR3A = temp;
 		break;
 	case 4:
-
-		OCR3BH = (temp >> 8);
-		OCR3BL = temp & 0xff;
+		OCR3B = temp;
 		break;
 	default:
-		temp = 36363 + (dutyCycle/100) * 2000 + 2000;
-		OCR1AH = (temp >> 8);
-		OCR1AL = temp & 0xff;
-
-		OCR1BH = (temp >> 8);
-		OCR1BL = temp & 0xff;
-
-		OCR3AH = (temp >> 8);
-		OCR3AL = temp & 0xff;
-
-		OCR3BH = (temp >> 8);
-		OCR3BL = temp & 0xff;
-
-
+		temp =  TOP * dutyCycle/10000.0;
+		OCR1A = temp;
+		OCR1B = temp;
+		OCR3A = temp;
+		OCR3B = temp;
 	}
-
-
-
 }
 
 /* Disabling all timers*/
