@@ -45,12 +45,12 @@ u8 GPS_Read(accel *position, accel *velocity)
 
 
 		flag = gps_data[16]; //Gps fix (PASS IT ONE I GET THE VARIABLE)
-		position->x = ((((s64)(gps_data[18])& 0xFF)) | (((s64)(gps_data[19]& 0xFF)) <<8)|(((s64)(gps_data[20]& 0xFF))<<16) | (((s64)(gps_data[21]& 0xFF))<<24))/100.0;
-		position->y = ((((s64)(gps_data[22])& 0xFF)) | (((s64)(gps_data[23]& 0xFF)) <<8)|(((s64)(gps_data[24]& 0xFF))<<16) | (((s64)(gps_data[25]& 0xFF))<<24))/100.0;
-		position->z = ((((s64)(gps_data[26])& 0xFF)) | (((s64)(gps_data[27]& 0xFF)) <<8)|(((s64)(gps_data[28]& 0xFF))<<16) | (((s64)(gps_data[29]& 0xFF))<<24))/100.0;
-		velocity->x = ((((s64)(gps_data[34])& 0xFF)) | (((s64)(gps_data[35]& 0xFF)) <<8)|(((s64)(gps_data[36]& 0xFF))<<16) | (((s64)(gps_data[37]& 0xFF))<<24))/100.0;
-		velocity->y = ((((s64)(gps_data[38])& 0xFF)) | (((s64)(gps_data[39]& 0xFF)) <<8)|(((s64)(gps_data[40]& 0xFF))<<16) | (((s64)(gps_data[41]& 0xFF))<<24))/100.0;
-		velocity->z = ((((s64)(gps_data[42])& 0xFF)) | (((s64)(gps_data[43]& 0xFF)) <<8)|(((s64)(gps_data[44]& 0xFF))<<16) | (((s64)(gps_data[45]& 0xFF))<<24))/100.0;
+		position->x = ((((s32)(gps_data[18])& 0xFF)) | (((s32)(gps_data[19]& 0xFF)) <<8)|(((s32)(gps_data[20]& 0xFF))<<16) | (((s32)(gps_data[21]& 0xFF))<<24))/100.0;
+		position->y = ((((s32)(gps_data[22])& 0xFF)) | (((s32)(gps_data[23]& 0xFF)) <<8)|(((s32)(gps_data[24]& 0xFF))<<16) | (((s32)(gps_data[25]& 0xFF))<<24))/100.0;
+		position->z = ((((s32)(gps_data[26])& 0xFF)) | (((s32)(gps_data[27]& 0xFF)) <<8)|(((s32)(gps_data[28]& 0xFF))<<16) | (((s32)(gps_data[29]& 0xFF))<<24))/100.0;
+		velocity->x = ((((s32)(gps_data[34])& 0xFF)) | (((s32)(gps_data[35]& 0xFF)) <<8)|(((s32)(gps_data[36]& 0xFF))<<16) | (((s32)(gps_data[37]& 0xFF))<<24))/100.0;
+		velocity->y = ((((s32)(gps_data[38])& 0xFF)) | (((s32)(gps_data[39]& 0xFF)) <<8)|(((s32)(gps_data[40]& 0xFF))<<16) | (((s32)(gps_data[41]& 0xFF))<<24))/100.0;
+		velocity->z = ((((s32)(gps_data[42])& 0xFF)) | (((s32)(gps_data[43]& 0xFF)) <<8)|(((s32)(gps_data[44]& 0xFF))<<16) | (((s32)(gps_data[45]& 0xFF))<<24))/100.0;
 
 
 
