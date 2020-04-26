@@ -8,6 +8,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-f32 kp_rate=1, Ixx=1, Iyy=1, Izz=1, m=1, kp_bank=1,kd,g=9.812, taw=1, L  = 1, k_thrust;
+f32 Ixx=0.08, Iyy=0.08, Izz=0.000638, m=1, kp_bank=10, g=9.812, L  = 1, k_thrust = 0.016;
+f32 kp_xy = 32, kd_xy = 12, kp_z = 32, kd_z = 12, kp_yaw = 2, kp_p = 80, kp_q = 80, kp_r = 15;
 
 #endif /* CONSTANTS_H_ */
